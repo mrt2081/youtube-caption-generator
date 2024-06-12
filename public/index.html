@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Audio Transcriber</title>
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- jQuery UI CSS for Autocomplete -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10">
+        <h1 class="text-center text-3xl font-bold">YouTube Audio Transcriber</h1>
+        <div class="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+            <form id="transcriberForm">
+                <div class="mb-4">
+                    <label for="youtubeLink" class="block text-sm font-semibold text-gray-600">YouTube Link:</label>
+                    <input type="text"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                        name="youtubeLink" id="youtubeLink" required />
+                </div>
+                <div class="mb-4">
+                    <label for="language" class="block text-sm font-semibold text-gray-600">Language:</label>
+                    <input type="text"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                        name="language" id="language" required />
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-semibold text-gray-600">Email:</label>
+                    <input type="email"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                        name="email" id="email" required />
+                </div>
+                <div class="text-center">
+                    <button type="submit"
+                        class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- jQuery, jQuery UI, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      const languages = [
+        { label: "Afrikaans", value: "af" },
+        { label: "Albanian", value: "sq" },
+        { label: "Amharic", value: "am" },
+        { label: "Arabic", value: "ar" },
+        { label: "Armenian", value: "hy" },
+        { label: "Azerbaijani", value: "az" },
+        { label: "Basque", value: "eu" },
+        { label: "Belarusian", value: "be" },
+        { label: "Bengali", value: "bn" },
+        { label: "Bosnian", value: "bs" },
+        { label: "Bulgarian", value: "bg" },
+        { label: "Catalan", value: "ca" },
+        { label: "Cebuano", value: "ceb" },
+        { label: "Chinese (Simplified)", value: "zh-CN" },
+        { label: "Chinese (Traditional)", value: "zh-TW" },
+        { label: "Corsican", value: "co" },
+        { label: "Croatian", value: "hr" },
+        { label: "Czech", value: "cs" },
+        { label: "Danish", value: "da" },
+        { label: "Dutch", value: "nl" },
+        { label: "English", value: "en" },
+        { label: "Esperanto", value: "eo" },
+        { label: "Estonian", value: "et" },
+        { label: "Finnish", value: "fi" },
+        { label: "French", value: "fr" },
+        { label: "Frisian", value: "fy" },
+        { label: "Galician", value: "gl" },
+        { label: "Georgian", value: "ka" },
+        { label: "German", value: "de" },
+        { label: "Greek", value: "el" },
+        { label: "Gujarati", value: "gu" },
+        { label: "Haitian Creole", value: "ht" },
+        { label: "Hausa", value: "ha" },
+        { label: "Hawaiian", value: "haw" },
+        { label: "Hebrew", value: "he" },
+        { label: "Hindi", value: "hi" },
+        { label: "Hmong", value: "hmn" },
+        { label: "Hungarian", value: "hu" },
+        { label: "Icelandic", value: "is" },
+        { label: "Igbo", value: "ig" },
+        { label: "Indonesian", value: "id" },
+        { label: "Irish", value: "ga" },
+        { label: "Italian", value: "it" },
+        { label: "Japanese", value: "ja" },
+        { label: "Javanese", value: "jv" },
+        { label: "Kannada", value: "kn" },
+        { label: "Kazakh", value: "kk" },
+        { label: "Khmer", value: "km" },
+        { label: "Korean", value: "ko" },
+        { label: "Kurdish", value: "ku" },
+        { label: "Kyrgyz", value: "ky" },
+        { label: "Lao", value: "lo" },
+        { label: "Latin", value: "la" },
+        { label: "Latvian", value: "lv" },
+        { label: "Lithuanian", value: "lt" },
+        { label: "Luxembourgish", value: "lb" },
+        { label: "Macedonian", value: "mk" },
+        { label: "Malagasy", value: "mg" },
+        { label: "Malay", value: "ms" },
+        { label: "Malayalam", value: "ml" },
+        { label: "Maltese", value: "mt" },
+        { label: "Maori", value: "mi" },
+        { label: "Marathi", value: "mr" },
+        { label: "Mongolian", value: "mn" },
+        { label: "Myanmar (Burmese)", value: "my" },
+        { label: "Nepali", value: "ne" },
+        { label: "Norwegian", value: "no" },
+        { label: "Nyanja (Chichewa)", value: "ny" },
+        { label: "Pashto", value: "ps" },
+        { label: "Persian", value: "fa" },
+        { label: "Polish", value: "pl" },
+        { label: "Portuguese (Portugal, Brazil)", value: "pt" },
+        { label: "Punjabi", value: "pa" },
+        { label: "Romanian", value: "ro" },
+        { label: "Russian", value: "ru" },
+        { label: "Samoan", value: "sm" },
+        { label: "Scots Gaelic", value: "gd" },
+        { label: "Serbian", value: "sr" },
+        { label: "Sesotho", value: "st" },
+        { label: "Shona", value: "sn" },
+        { label: "Sindhi", value: "sd" },
+        { label: "Sinhala (Sinhalese)", value: "si" },
+        { label: "Slovak", value: "sk" },
+        { label: "Slovenian", value: "sl" },
+        { label: "Somali", value: "so" },
+        { label: "Spanish", value: "es" },
+        { label: "Sundanese", value: "su" },
+        { label: "Swahili", value: "sw" },
+        { label: "Swedish", value: "sv" },
+        { label: "Tagalog (Filipino)", value: "tl" },
+        { label: "Tajik", value: "tg" },
+        { label: "Tamil", value: "ta" },
+        { label: "Telugu", value: "te" },
+        { label: "Thai", value: "th" },
+        { label: "Turkish", value: "tr" },
+        { label: "Ukrainian", value: "uk" },
+        { label: "Urdu", value: "ur" },
+        { label: "Uzbek", value: "uz" },
+        { label: "Vietnamese", value: "vi" },
+        { label: "Welsh", value: "cy" },
+        { label: "Xhosa", value: "xh" },
+        { label: "Yiddish", value: "yi" },
+        { label: "Yoruba", value: "yo" },
+        { label: "Zulu", value: "zu" },
+      ];
+
+      $(document).ready(function () {
+        $("#language").autocomplete({
+          source: languages,
+          minLength: 2,
+          select: function (event, ui) {
+            $("#language").val(ui.item.label);
+            return false;
+          },
+        });
+
+        $("#transcriberForm").on("submit", async function (event) {
+          event.preventDefault();
+          const formData = {
+            youtubeLink: $("#youtubeLink").val(),
+            language: languages.find(
+              (lang) => lang.label === $("#language").val()
+            ).value,
+            email: $("#email").val(),
+          };
+
+          // Hide the form and show the progress bar
+     //     $("#transcriberContainer").hide();
+      //    $("#progressContainer").show();
+          const response = await fetch("/process", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+          if (result.downloadLink) {
+            const link = document.createElement("a");
+            link.href = result.downloadLink;
+            link.download = "output.zip";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            alert(result.message);
+          }
+        });
+
+        // Show the form and hide the progress bar after receiving the result
+        // $("#transcriberContainer").show();
+        // $("#progressContainer").hide();
+      });
+    </script>
+  </body>
+</html>
