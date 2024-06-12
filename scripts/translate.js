@@ -1,7 +1,8 @@
+require("dotenv").config();
 const fs = require("fs");
 const OpenAI = require("openai");
 
-const apiKey = process.env.OPENAI_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey });
 
 const translateAudio = async (inputFile, outputFile) => {

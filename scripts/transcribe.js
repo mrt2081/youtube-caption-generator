@@ -1,7 +1,8 @@
+require("dotenv").config();
 const fs = require("fs");
 const OpenAI = require("openai");
 
-const apiKey = process.env.OPENAI_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey });
 const systemPrompt =
   "You are a helpful assistant for creating transcibe from audio files, Your task is to correct any spelling discrepancies in the transcribed text. Only add necessary punctuation such as periods, commas, and capitalization, and use only the context provided.";

@@ -103,9 +103,9 @@ app.post("/process", async (req, res) => {
     });
 
     archive.pipe(output);
-    archive.file(audioOutput, { name: `${prefix}_output.mp3` });
-    archive.file(transcriptionOutput, { name: `${prefix}_transcription.txt` });
-    archive.file(translationOutput, { name: `${prefix}_translate.txt` });
+    archive.file(audioOutput, { name: `output.mp3` });
+    archive.file(transcriptionOutput, { name: `transcription.txt` });
+    archive.file(translationOutput, { name: `translate.txt` });
     archive.finalize();
   } catch (error) {
     console.error(error);
@@ -117,7 +117,7 @@ app.post("/process", async (req, res) => {
 // Serve zip files
 app.get("/download/:filename", (req, res) => {
   const filePath = path.join(__dirname, req.params.filename);
-  res.download(filePath, (err) => {
+  res.download(filePath, "output.zip", (err) => {
     if (err) {
       console.error(`Error downloading file ${filePath}:`, err);
     } else {
